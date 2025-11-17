@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Fare Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .header h1 i {
+      color: #667eea;
+      font-size: 36px;
+    }
+
+    .header p {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group label i {
+      color: #667eea;
+      font-size: 16px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      background: white;
+      color: #2d3748;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .form-group input::placeholder {
+      color: #a0aec0;
+    }
+
+    .form-group input.error,
+    .form-group select.error {
+      border-color: #fc8181;
+      box-shadow: 0 0 0 3px rgba(252, 129, 129, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #output {
+      margin-top: 30px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .result-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border-color: #667eea;
+    }
+
+    .result-card.cheapest {
+      background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+      border: 2px solid #48bb78;
+      box-shadow: 0 4px 20px rgba(72, 187, 120, 0.2);
+    }
+
+    .result-card.cheapest:hover {
+      border-color: #38a169;
+      box-shadow: 0 8px 30px rgba(72, 187, 120, 0.3);
+    }
+
+    .cheapest-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .savings-badge {
+      display: inline-block;
+      background: #fed7d7;
+      color: #c53030;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .savings-text {
+      color: #c53030;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .result-card h3 {
+      font-size: 20px;
+      color: #2d3748;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-card h3 i {
+      color: #667eea;
+    }
+
+    .price {
+      font-size: 28px;
+      font-weight: 700;
+      color: #667eea;
+      margin-top: 8px;
+    }
+
+    .price-label {
+      font-size: 14px;
+      color: #718096;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .error-card {
+      background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+      border-color: #fc8181;
+      color: #c53030;
+    }
+
+    .error-card h3 {
+      color: #c53030;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #718096;
+    }
+
+    .no-results i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: #cbd5e0;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 30px 20px;
+      }
+
+      .header h1 {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-plane"></i> Flight Fare Prediction</h1>
+      <p>Get accurate flight fare predictions powered by AI</p>
+    </div>
+
+    <form id="predictionForm" onsubmit="event.preventDefault(); predict();">
+      <div class="form-group">
+        <label><i class="fas fa-map-marker-alt"></i> Source City</label>
+        <input id="source_city" placeholder="e.g. Delhi" required>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-map-marker-alt"></i> Destination City</label>
+        <input id="destination_city" placeholder="e.g. Mumbai" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fas fa-clock"></i> Departure Time</label>
+          <select id="departure_time" required>
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+            <option value="Night">Night</option>
+            <option value="Early_Morning">Early_Morning</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-clock"></i> Arrival Time</label>
+          <select id="arrival_time" required>
+            <option value="Morning">Morning</option>
+            <option value="Afternoon">Afternoon</option>
+            <option value="Evening">Evening</option>
+            <option value="Night">Night</option>
+            <option value="Early_Morning">Early_Morning</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fas fa-route"></i> Stops</label>
+          <select id="stops" required>
+            <option value="zero">Zero</option>
+            <option value="one">One</option>
+            <option value="two_or_more">Two or More</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-couch"></i> Class</label>
+          <select id="class_type" required>
+            <option value="Economy">Economy</option>
+            <option value="Business">Business</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fas fa-hourglass-half"></i> Duration (hours)</label>
+          <input type="number" id="duration" step="0.1" placeholder="e.g. 2.5" required min="0.1">
+        </div>
+
+        <div class="form-group">
+          <label><i class="fas fa-calendar-alt"></i> Days Left</label>
+          <input type="number" id="days_left" placeholder="e.g. 20" required min="1">
+        </div>
+      </div>
+
+      <button type="submit" id="predictBtn">
+        <i class="fas fa-search"></i>
+        Predict Price
+      </button>
+    </form>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Analyzing flight data...</p>
+    </div>
+
+    <div id="output"></div>
+  </div>
+</div>
+
+<script>
+function predict() {
+  const predictBtn = document.getElementById("predictBtn");
+  const loading = document.getElementById("loading");
+  const output = document.getElementById("output");
+
+  const sourceCityInput = document.getElementById("source_city");
+  const destinationCityInput = document.getElementById("destination_city");
+  const sourceCity = sourceCityInput.value.trim();
+  const destinationCity = destinationCityInput.value.trim();
+
+  // Remove any previous error states
+  sourceCityInput.classList.remove("error");
+  destinationCityInput.classList.remove("error");
+
+  // Validate: source and destination cannot be the same
+  if (sourceCity.toLowerCase() === destinationCity.toLowerCase()) {
+    // Highlight the input fields with error
+    sourceCityInput.classList.add("error");
+    destinationCityInput.classList.add("error");
+    
+    output.innerHTML = `
+      <div class="result-card error-card">
+        <h3><i class="fas fa-exclamation-triangle"></i> Invalid Route</h3>
+        <p>Source and destination cities cannot be the same. Please select different cities.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Show loading state
+  predictBtn.disabled = true;
+  loading.classList.add("active");
+  output.innerHTML = "";
+
+  const data = {
+    source_city: sourceCity,
+    destination_city: destinationCity,
+    departure_time: document.getElementById("departure_time").value,
+    arrival_time: document.getElementById("arrival_time").value,
+    stops: document.getElementById("stops").value,
+    class: document.getElementById("class_type").value,
+    duration: parseFloat(document.getElementById("duration").value),
+    days_left: parseInt(document.getElementById("days_left").value)
+  };
+
+  fetch("http://127.0.0.1:5000/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+    loading.classList.remove("active");
+    predictBtn.disabled = false;
+    let html = "";
+
+    if (result.predictions && result.predictions.length === 0) {
+      html = `
+        <div class="result-card no-results">
+          <i class="fas fa-inbox"></i>
+          <h3>No flights available</h3>
+          <p>No flights found for this route. Please try different cities c.</p>
+        </div>
+      `;
+    } else if (result.predictions && result.predictions.length > 0) {
+      // Filter: If Business class is selected, only show Vistara and Air India
+      const selectedClass = document.getElementById("class_type").value;
+      let filteredPredictions = result.predictions;
+      
+      if (selectedClass === "Business") {
+        filteredPredictions = result.predictions.filter(f => {
+          const airline = (f.airline || "").toLowerCase();
+          return airline.includes("vistara") || airline.includes("air_india") || airline.includes("air india");
+        });
+        
+        // If no business class airlines found, show message
+        if (filteredPredictions.length === 0) {
+          html = `
+            <div class="result-card error-card">
+              <h3><i class="fas fa-exclamation-triangle"></i> Business Class Not Available</h3>
+              <p> This route doesn't have Business class options. Please select Economy class or try a different route.</p>
+            </div>
+          `;
+          output.innerHTML = html;
+          return;
+        }
+      }
+      
+      // Display filtered predictions
+      filteredPredictions.forEach((f, index) => {
+        const isCheapest = f.is_cheapest || false;
+        const savings = f.savings || 0;
+        
+        html += `
+          <div class="result-card ${isCheapest ? 'cheapest' : ''}" style="animation-delay: ${index * 0.1}s">
+            ${isCheapest ? '<div class="cheapest-badge"><i class="fas fa-tag"></i> Best Deal</div>' : ''}
+            <h3><i class="fas fa-plane"></i> ${f.airline || 'Flight'}</h3>
+            <div class="price-label">Predicted Price</div>
+            <div class="price">₹${parseInt(f.price).toLocaleString('en-IN')}</div>
+            ${!isCheapest && savings > 0 ? `<div class="savings-text"><i class="fas fa-info-circle"></i> Save ₹${parseInt(savings).toLocaleString('en-IN')} by choosing the cheapest option</div>` : ''}
+          </div>
+        `;
+      });
+    } else {
+      html = `
+        <div class="result-card error-card">
+          <h3><i class="fas fa-exclamation-triangle"></i> Unexpected Response</h3>
+          <p>Please check the backend response format.</p>
+        </div>
+      `;
+    }
+
+    output.innerHTML = html;
+  })
+  .catch((error) => {
+    loading.classList.remove("active");
+    predictBtn.disabled = false;
+    output.innerHTML = `
+      <div class="result-card error-card">
+        <h3><i class="fas fa-exclamation-circle"></i> Connection Error</h3>
+        <p>Unable to connect to the backend server. Please make sure the server is running on http://127.0.0.1:5000</p>
+      </div>
+    `;
+    console.error("Error:", error);
+  });
+}
+
+// Clear error state when user starts typing
+document.getElementById("source_city").addEventListener("input", function() {
+  this.classList.remove("error");
+});
+
+document.getElementById("destination_city").addEventListener("input", function() {
+  this.classList.remove("error");
+});
+</script>
+
+</body>
+</html>
