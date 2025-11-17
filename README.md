@@ -1,30 +1,30 @@
 # Flight-Fare-Prediction
 Flight Ticket Price Prediction project
 
-✈️ Flight Ticket Price Prediction
+ Flight Ticket Price Prediction
 
 A machine learning project that predicts the ticket fare of domestic flights in India based on factors like airline, cities, class, duration, stops, and days left before departure.
 
-📌 Project Overview
+ Project Overview
 
 Flight ticket prices fluctuate based on several factors. This project analyses a large dataset of Indian flight fares and builds ML models to accurately predict flight prices.
 We built an end-to-end system with:
 
-✔ Data preprocessing
+ Data preprocessing
 
-✔ Feature engineering
+ Feature engineering
 
-✔ Model training (Linear Regression, Random Forest, CatBoost, XGBoost etc.)
+ Model training (Linear Regression, Random Forest, CatBoost, XGBoost etc.)
 
-✔ Model comparison & evaluation
+ Model comparison & evaluation
 
-✔ Flask backend for prediction API
+ Flask backend for prediction API
 
-✔ Frontend (HTML/CSS/JS) for user input
+ Frontend (HTML/CSS/JS) for user input
 
-✔ Deployment-ready Python code
+ Deployment-ready Python code
 
-📂 Tech Stack
+ Tech Stack
 
 Frontend-
 
@@ -54,7 +54,7 @@ CatBoost
 
 RandomForest
 
-📊 Dataset Features
+ Dataset Features
 
 Model is trained on the following important features:
 
@@ -69,9 +69,9 @@ days_left
 
 Note: Dataset does not contain weekday/weekend info. Prediction is based only on the above factors.
 
-🧠 Models Used
+ Models Used
 
-1️⃣ Linear Regression
+1️. Linear Regression
 
 Baseline model
 
@@ -79,7 +79,7 @@ Simple & interpretable
 
 Helps understand feature importance
 
-2️⃣ Random Forest Regressor
+2️. Random Forest Regressor
 
 Works well on non-linear data
 
@@ -88,7 +88,7 @@ Reduces overfitting
 Better than Linear Regression
 
 
-3️⃣ CatBoost Regressor
+3️.CatBoost Regressor
 Handles categorical features automatically
 
 Reduces need for one-hot encoding
@@ -97,7 +97,7 @@ Fast training
 
 High accuracy
 
-4️⃣ XGBoost Regressor (Best Model)
+4️. XGBoost Regressor (Best Model)
 
 Most powerful model in the project
 
@@ -111,7 +111,7 @@ Highest accuracy among all models
 
 
 
-📂 Project Structure
+ Project Structure
 
 AIML HACKATHON/
 
@@ -130,7 +130,7 @@ AIML HACKATHON/
 │── Random Forest_model.pkl     
 
 
-🚀 How to Run the Project
+ How to Run the Project
 
 1. Clone the repository
    
